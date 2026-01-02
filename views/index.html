@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global Invest Sim | Dashboard</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="brand">GLOBAL INVEST <span>SIM</span></div>
+        <nav class="nav-links">
+            <a class="active" href="/">Ana Sayfa</a>
+            <a href="/add">İşlem Ekle</a>
+            <a href="/list">İşlemler</a>
+            <a href="/stats">İstatistikler</a>
+            <a href="/about">Hakkında</a>
+        </nav>
+        <div class="system-status">
+            <span class="dot"></span>
+            Sistem Durumu: Aktif
+        </div>
+
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <a class="side-item active" href="/add">İşlem Ekle</a>
+            <a class="side-item" href="/list">Geçmiş İşlemler</a>
+            <a class="side-item" href="/stats">Rapor / İstatistik</a>
+            <a class="side-item" href="/about">Proje Bilgisi</a>
+        </aside>
+
+        <main class="content">
+            <section class="hero">
+                <!-- CANLI SİMÜLASYON VERİLERİ -->
+                <section class="live-sim-section">
+                    <div class="live-sim-grid">
+
+                        <div class="live-sim-card">
+                            <div class="floating-icon">📈</div>
+
+                            <h3>Küresel Piyasalar</h3>
+                            <p>Anlık veri akışı simülasyonu aktif.</p>
+                        </div>
+
+                        <div class="live-sim-card">
+                            <h3>İşlem Hızı</h3>
+                            <p>SQLite altyapısı ile 0.1ms işlem süresi.</p>
+                        </div>
+
+                        <div class="live-sim-card">
+                            <h3>Güvenli Portföy</h3>
+                            <p>Verileriniz yerel depolama ile %100 güvende.</p>
+                        </div>
+
+                    </div>
+                </section>
+
+                <h1>Yatırımcı İşlem Takip Sistemi</h1>
+                <p>(Simülasyon Projesi) — Yatırım işlemlerini kaydet, geçmişi incele, özet raporları görüntüle.</p>
+                <a class="btn" href="/add">Simülasyona Başla</a>
+            </section>
+
+            <!-- 3 Kolon Features -->
+            <section class="features grid-3">
+                <div class="card">
+                    <h3>Hızlı Kayıt</h3>
+                    <p class="muted">Hisse, fiyat ve adet bilgilerini doğrulama kontrolleriyle güvenle kaydet.</p>
+                </div>
+                <div class="card">
+                    <h3>İşlem Geçmişi</h3>
+                    <p class="muted">Kayıtları tarih sırasına göre listele, standart (DD.MM.YYYY) tarih formatı kullan.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>Kurumsal Özet</h3>
+                    <p class="muted">Toplam yatırım ve işlem sayısını kart yapısında, TRY para formatıyla görüntüle.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>İstatistikler | Global Invest Sim</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="brand">GLOBAL INVEST <span>SIM</span></div>
+        <nav class="nav-links">
+            <a href="/">Ana Sayfa</a>
+            <a href="/add">İşlem Ekle</a>
+            <a href="/list">İşlemler</a>
+            <a class="active" href="/stats">İstatistikler</a>
+            <a href="/about">Hakkında</a>
+        </nav>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <a class="side-item" href="/add">Yeni İşlem</a>
+            <a class="side-item" href="/list">İşlem Listesi</a>
+            <a class="side-item active" href="/stats">İstatistik</a>
+        </aside>
+
+        <main class="content">
+
+            <!-- ÜST KARTLAR -->
+            <section class="grid-3">
+                <div class="card">
+                    <h3>Toplam İşlem</h3>
+                    <p id="txCount" class="muted">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Toplam Adet</h3>
+                    <p id="totalQty" class="muted">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Toplam Yatırım</h3>
+                    <p id="totalInv" class="muted">₺0,00</p>
+                </div>
+            </section>
+
+            <!-- GRAFİK -->
+            <section class="card" style="margin-top:30px">
+                <h3>Portföy Dağılımı</h3>
+                <div style="max-width:420px;margin:0 auto">
+                    <canvas id="portfolioChart"></canvas>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        fetch("/api/transactions")
+            .then(r => r.json())
+            .then(({ ok, data }) => {
+                if (!ok) return;
+
+                document.getElementById("txCount").innerText = data.length;
+
+                let qty = 0;
+                let total = 0;
+                const map = {};
+
+                data.forEach(t => {
+                    const p = Number(t.price);
+                    const q = Number(t.quantity);
+                    qty += q;
+                    total += p * q;
+
+                    map[t.stock] = (map[t.stock] || 0) + (p * q);
+                });
+
+                document.getElementById("totalQty").innerText = qty;
+                document.getElementById("totalInv").innerText =
+                    total.toLocaleString("tr-TR", {
+                        style: "currency",
+                        currency: "TRY"
+                    });
+
+                const labels = Object.keys(map);
+                const values = Object.values(map);
+
+                new Chart(document.getElementById("portfolioChart"), {
+                    type: "pie",
+                    data: {
+                        labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: [
+                                "#34d399",
+                                "#60a5fa",
+                                "#fbbf24",
+                                "#f87171",
+                                "#a78bfa"
+                            ],
+                            borderWidth: 2,
+                            borderColor: "#0f172a"
+                        }]
+                    },
+
+                    /* =========================
+                       PROFESYONEL OPTIONS
+                    ========================== */
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+
+                        animation: {
+                            animateRotate: true,
+                            duration: 1200,
+                            easing: "easeOutQuart"
+                        },
+
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                                labels: {
+                                    color: "#cbd5e1",
+                                    padding: 20,
+                                    font: {
+                                        size: 13
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (ctx) {
+                                        return ctx.label + ": " +
+                                            ctx.raw.toLocaleString("tr-TR", {
+                                                style: "currency",
+                                                currency: "TRY"
+                                            });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+
+</body>
+
+</html>

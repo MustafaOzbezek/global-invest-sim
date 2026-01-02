@@ -1,0 +1,27 @@
+{
+  "name": "invest-sim",
+  "version": "1.0.0",
+  "description": "Web Tasarım ve Programlama dersi final projesi - Yatırımcı İşlem Takip Sistemi (Simülasyon)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "sqlite",
+    "web-tasarim",
+    "final-projesi",
+    "yatirim-simulasyon"
+  ],
+  "author": "Mustafa Özbezek",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

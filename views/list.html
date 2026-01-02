@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>İşlemler | Global Invest Sim</title>
+    <link rel="stylesheet" href="/public/css/style.css" />
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">GLOBAL INVEST SIM</div>
+        <div class="nav-links">
+            <a href="/">Ana Sayfa</a>
+            <a href="/add">İşlem Ekle</a>
+            <a href="/list" class="active">İşlemler</a>
+            <a href="/stats">İstatistikler</a>
+            <a href="/about">Hakkımızda</a>
+        </div>
+    </div>
+
+    <div class="page">
+        <h1 class="page-title">İşlem Listesi</h1>
+
+        <!-- ARAMA -->
+        <div class="card" style="margin-bottom: 16px;">
+            <input type="text" id="searchInput" placeholder="Hisse ara (örn: THYAO)"
+                style="width: 100%; padding: 12px;" />
+        </div>
+
+        <!-- TABLO -->
+        <div class="card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Hisse</th>
+                        <th>Fiyat (TL)</th>
+                        <th>Adet</th>
+                        <th>Toplam (TL)</th>
+                        <th>Tarih</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTable">
+                    <tr>
+                        <td colspan="7" class="muted">Yükleniyor...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let allRows = [];
+
+        // VERİYİ ÇEK
+        fetch("/api/transactions")
+            .then(res => res.json())
+            .then(result => {
+                const table = document.getElementById("transactionTable");
+
+                if (!result.ok || result.data.length === 0) {
+                    table.innerHTML = `
+            <tr>
+              <td colspan="7" class="muted">Henüz kayıtlı işlem yok</td>
+            </tr>
+          `;
+                    return;
+                }
+
+                allRows = result.data;
+                renderTable(allRows);
+            });
+
+        // TABLOYU ÇİZ
+        function renderTable(rows) {
+            const table = document.getElementById("transactionTable");
+            table.innerHTML = "";
+
+            rows.forEach((item, index) => {
+                const total = item.price * item.quantity;
+                const date = new Date(item.created_at).toLocaleDateString("tr-TR");
+
+                table.innerHTML += `
+          <tr data-stock="${item.stock.toLowerCase()}">
+            <td>${index + 1}</td>
+            <td>${item.stock}</td>
+            <td>${item.price.toFixed(2)}</td>
+            <td>${item.quantity}</td>
+            <td>${total.toFixed(2)}</td>
+            <td>${date}</td>
+            <td>
+              <button class="btn btn-danger" onclick="deleteRow(${item.id})">
+                Sil
+              </button>
+            </td>
+          </tr>
+        `;
+            });
+        }
+
+        // ARAMA / FİLTRE
+        document.getElementById("searchInput").addEventListener("input", (e) => {
+            const value = e.target.value.toLowerCase();
+            const filtered = allRows.filter(item =>
+                item.stock.toLowerCase().includes(value)
+            );
+            renderTable(filtered);
+        });
+
+        // SİLME
+        function deleteRow(id) {
+            if (!confirm("Bu işlem geri alınamaz. Emin misiniz?")) return;
+
+            fetch(`/api/transactions/${id}`, { method: "DELETE" })
+                .then(res => res.json())
+                .then(result => {
+                    if (!result.ok) {
+                        alert("Silme sırasında hata oluştu.");
+                        return;
+                    }
+
+                    // EKRANDAN KALDIR
+                    allRows = allRows.filter(item => item.id !== id);
+                    renderTable(allRows);
+                });
+        }
+    </script>
+</body>
+
+</html>
