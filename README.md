@@ -1,6 +1,6 @@
 # Global Invest Sim
 
-Web Tasarım ve Programlama dersi final projesi kapsamında geliştirilmiş
+
 yatırım işlemleri simülasyon web uygulamasıdır.
 
 ## Kullanılan Teknolojiler
